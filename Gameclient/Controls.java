@@ -6,6 +6,7 @@ public class Controls implements KeyListener{
     
     Controls(Server server){
         super();
+        this.server = server;
     }
 
 
@@ -14,6 +15,7 @@ public class Controls implements KeyListener{
     
     public void keyPressed(KeyEvent e) {
         server.sendControl(e.getKeyCode());
+        System.out.println("Send key pressed");
     }
 
     @Override

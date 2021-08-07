@@ -55,7 +55,7 @@ public class GameLogic extends DefaultGameLogic {
 
 		
 		fallingShape = newShape;
-        System.out.println("falling shape");
+        System.out.println("new falling shape");
 		if(willCollide(0, 1)) {
 			System.out.printf("Finish him");
 		}
@@ -131,8 +131,8 @@ public class GameLogic extends DefaultGameLogic {
 		for (Point point : fallingShape.getShape()) {
 			int newX = point.x + centerPoint.x;
 			int newY = point.y + centerPoint.y;
-
-			gameMap.setMapBlock(newX, newY, fallingShape.color);
+            
+            gameMap.setMapBlock(newX, newY, fallingShape.color);
 		}
 	}
 
@@ -191,5 +191,9 @@ public class GameLogic extends DefaultGameLogic {
 
     public int getMaxPlayers(){
         return 2;
+    }
+
+    public GameData generaGameData(){
+        return new GameData(gameMap.getMap(), score++);
     }
 }

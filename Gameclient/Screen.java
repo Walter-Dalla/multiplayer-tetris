@@ -6,14 +6,14 @@ import javax.swing.JPanel;
 public class Screen extends JPanel {
 	private static final long serialVersionUID = -8715353373678321308L;
 
-    private GameMap gameMap = new GameMap(12, 24);
 	private int score = 100;
+    private Color[][] gameMap;
 
     void setScore(int score){
         this.score = score;
     }
 
-    void setGameMap(GameMap gameMap){
+    void setGameMap(Color[][] gameMap){
         this.gameMap = gameMap;
     }
 	
@@ -21,10 +21,14 @@ public class Screen extends JPanel {
 	public void paintComponent(Graphics g)
 	{
 		
+        if(gameMap == null){
+            return;
+        }
+
 		g.fillRect(0, 0, 26*12, 26*24);
 		for (int i = 0; i < 12; i++) {
 			for (int j = 0; j < 24; j++) {
-				g.setColor(gameMap.getMap()[i][j]);
+				g.setColor(gameMap[i][j]);
 				g.fillRect(26*i, 26*j, 25, 25);
 			}
 		}
@@ -35,10 +39,10 @@ public class Screen extends JPanel {
 		
 	}
 
-    public void paintGame(DefaultGameLogic logic){
+    public void paintGame(GameData gameData){
 
-        setGameMap(logic.getGameMap());
-        setScore(logic.getScore());
+        setGameMap(gameData.map);
+        setScore(gameData.score);
         
         repaint();
     }

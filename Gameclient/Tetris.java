@@ -19,14 +19,12 @@ public class Tetris extends JPanel {
         
 		
 		final Screen game = new Screen();
-		final Screen game2 = new Screen();
 
 		GridLayout gridLayout = new GridLayout(0, 2);
         f.setLayout(gridLayout);
         gridLayout.layoutContainer(f);
 
 		f.add(game);
-		f.add(game2);
 		f.setVisible(true);
 		
 		f.addKeyListener(new Controls(s));
@@ -37,10 +35,10 @@ public class Tetris extends JPanel {
 				while (true) {
 					
 					try {
-						Thread.sleep(600);
-                        DefaultGameLogic gameLogic1 = s.receiveLogic();
+                        GameData gameLogic1 = s.receiveGameDataFromServer();
 						
                         game.paintGame(gameLogic1);
+						Thread.sleep(100);
 					} catch ( InterruptedException e ) {
 						System.out.println(e.getMessage());
 					}

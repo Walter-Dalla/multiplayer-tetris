@@ -22,20 +22,19 @@ public class Server {
         }
     }
 
-    public DefaultGameLogic receiveLogic() {
-        DefaultGameLogic logic = null;
+    public GameData receiveGameDataFromServer() {
+        GameData data = null;
 
         try {
-          
-            // logic.setGameMap((GameMap) is.readObject());
-            logic = (DefaultGameLogic) is.readObject();
-            
+            data = (GameData) is.readObject();
+
+            System.out.println("received data!" + data.score);
 
         } catch (Exception e) {
           Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
 
-        return logic; 
+        return data; 
     }
 
 

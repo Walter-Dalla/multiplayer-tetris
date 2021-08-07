@@ -1,4 +1,6 @@
+import java.awt.Color;
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -39,13 +41,11 @@ public class GameCluster implements IJogo{
                 ObjectOutputStream dos = outputList.get(i);
                 GameLogic logic = new GameLogic();
                 logics.add(logic);
+                GameData gameData = new GameData(logic.gameMap.getMap(), logic.score);
                 
-                DefaultGameLogic dgl = new DefaultGameLogic();
-                dgl.setScore(logic.score);
-                dgl.setGameMap(logic.gameMap);
-                
-                dos.writeObject(dgl);
-                System.out.println("Sending object");
+                dos.writeObject(gameData);
+
+                System.out.println("Sending object - on start");
                 dos.flush();
             }
 
@@ -54,46 +54,75 @@ public class GameCluster implements IJogo{
         }
         iniciaThreadJogoEnvio();
     }
+
     public void iniciaThreadJogoEnvio() {
         new Thread(new Runnable() {
-          public void run() {
-            while (true) {
-                try {
-                    for(int i = 0; i < clients.size(); i++){
-                        ObjectOutputStream dos = outputList.get(i);
-                        GameLogic logic = logics.get(i);
-                        logic.fallBlock();
-                        logic.beforePaintComponent();
-                        logic.setScore(33);
-                        
-                        DefaultGameLogic dgl = new DefaultGameLogic();
-                        dgl.setScore(logic.score);
-                        dgl.setGameMap(logic.gameMap);
-                        
-                        dos.writeObject(dgl);
-                        System.out.println("Sending object");
-                        dos.flush();
-                        
+            public void run() {
+                Boolean gameOver = false;
+                while (!gameOver) {
+                    try {
+                        for(int i = 0; i < clients.size(); i++){
+                            
+                            DataInputStream input = inputList.get(i);
+                            
+                            if(input.available() > 0){
+                                GameLogic logic = logics.get(i);
+                                
+                                int command = input.readInt();
+                                logic = ControlHandler.handleCommand(logic, command);
+                                logic.beforePaintComponent();
+                                
+                                GameData gameData = logic.generaGameData();
+                                sendDataToClient(gameData, i);
+                                
+                                System.out.println("command " + command + " --->" + logic.score);
+                            }
+                        }
+                    }
+                    catch (Exception e) {
+                        gameOver = true;
+                        System.out.println(e.getMessage());
                     }
                 }
-                catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-              try {
-                Thread.sleep(1);
-              } catch (InterruptedException e) {
-                e.printStackTrace();
-              }
             }
-          }
         }).start();
-      }
+
+        new Thread(new Runnable() {
+            public void run() {
+                while (true) {
+                    try {
+                        for(int i = 0; i < clients.size(); i++){
+                            
+                            GameLogic logic = logics.get(i);
+                            logic.fallBlock();
+                            logic.beforePaintComponent();
+                            
+                            GameData gameData = logic.generaGameData();
+                            sendDataToClient(gameData, i);
+                        }
+                        Thread.sleep(1000);
+                    }
+                    catch (Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }
+            }
+        }).start();
+    }
+
+    private synchronized void sendDataToClient(GameData gameData, Integer playerIndex) throws IOException {
+        ObjectOutputStream dos = outputList.get(playerIndex);
+        dos.reset();
+        dos.writeObject(gameData);
+        dos.flush();
+
+        System.out.println("Sending object - game");
+    }
 
 
     public void getCommand(int playerNumber) {
         try {
             inputList.get(playerNumber).readInt();
-            System.out.println(playerNumber);
         } 
         catch (Exception e) {
             e.printStackTrace();
