@@ -14,23 +14,32 @@ public class JogoServidor {
       System.exit(1);
     }
 
-    while (true) {
-      IJogo game = new GameCluster();
-      int numMaximoJogadores = game.getMaxPlayers();
-      for (int i = 0; i < numMaximoJogadores; i++) {
+    IGame game = new GameCluster(serverSocket);
+
+    int numMaximoJogadores = game.getMaxPlayers();
+    for (int i = 0; i < numMaximoJogadores; i++) {
         Socket clientSocket = null;
         try {
-          System.out.println("Esperando conexao de um jogador.");
-          clientSocket = serverSocket.accept();
+            System.out.println("Esperando conexao de um jogador.");
+            clientSocket = serverSocket.accept();
         } catch (IOException e) {
-          System.out.println("Accept falhou: " + porto + ".\n" + e);
-          System.exit(1);
+            System.out.println("Accept falhou: " + porto + ".\n" + e);
+            System.exit(1);
         }
         System.out.println("Accept Funcionou!");
         game.addNewPlayer(clientSocket);
-      }
-      
-      game.startGame();
     }
+    game.startGame();
+
+    do{
+        
+    }while(!game.isGameOver());
+    
+    game.endGame();
+
+    do{
+        
+    }while(true);
+
   }
 }

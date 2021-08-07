@@ -3,11 +3,12 @@ import java.awt.Point;
 import java.util.Random;
 
 
-public class GameLogic extends DefaultGameLogic {
+public class GameLogic extends DefaultGameLogic implements ILogic {
    private Random rand = new Random();
     
 	private Shape fallingShape;
 	private Point centerPoint = new Point(5, 2);
+    private boolean gameOver = false;
     
     int ROW_DEFAULT_VALUE = 100;
 
@@ -59,7 +60,7 @@ public class GameLogic extends DefaultGameLogic {
 		fallingShape = newShape;
         System.out.println("new falling shape");
 		if(willCollide(0, 1)) {
-			System.out.printf("Finish him");
+			gameOver = true;
 		}
 	}
 
@@ -129,7 +130,7 @@ public class GameLogic extends DefaultGameLogic {
 		}
 	}
 
-	public void renderShapes(){
+	private void renderShapes(){
 		for (Point point : fallingShape.getShape()) {
 			int newX = point.x + centerPoint.x;
 			int newY = point.y + centerPoint.y;
@@ -148,7 +149,7 @@ public class GameLogic extends DefaultGameLogic {
 		}
 	}
 
-	public void isFull(){
+	private void isFull(){
 		int rowStrick = 0;
 		int mapOffset = 1;
 
@@ -166,7 +167,7 @@ public class GameLogic extends DefaultGameLogic {
 		calculatePoints(rowStrick);
 	}
 
-	public void calculatePoints(int rowStrick){
+	private void calculatePoints(int rowStrick){
         addScore(ROW_DEFAULT_VALUE * rowStrick);
 	}
 	
@@ -177,11 +178,16 @@ public class GameLogic extends DefaultGameLogic {
 		
 	}
 
-    public int getMaxPlayers(){
-        return 2;
+    public GameData generaGameData(){
+        System.out.println(gameOver);
+        return new GameData(gameMap.getMap(), score++, gameOver);
     }
 
-    public GameData generaGameData(){
-        return new GameData(gameMap.getMap(), score++);
+    public boolean gameIsOver() {
+        return gameOver;
+    }
+
+    public void setGameOver() {
+        gameOver = true;
     }
 }

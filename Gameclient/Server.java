@@ -23,14 +23,13 @@ public class Server {
         }
     }
 
-    public LinkedList<GameData> receiveGameDataFromServer() {
+    synchronized public LinkedList<GameData> receiveGameDataFromServer() {
         LinkedList<GameData> data = null;
 
         try {
             data = (LinkedList<GameData>) is.readObject();
-
             System.out.println("received data!");
-
+           
         } catch (Exception e) {
           Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
@@ -48,7 +47,7 @@ public class Server {
         }
     }
 
-    public int getGameId() {
+    synchronized public int getGameId() {
         int gameId = -1;
         try {
             gameId = is.readInt();
@@ -56,27 +55,41 @@ public class Server {
             System.out.println("received game id!");
 
         } catch (Exception e) {
-          Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
+            
+            Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
 
         return gameId;
     }
 
-    public int getPlayerNumbers() {
+
+    synchronized public int getWinnerId() {
         int gameId = -1;
         try {
             gameId = is.readInt();
 
-            System.out.println("received game id!");
+            System.out.println("received winner id!");
+
+        } catch (Exception e) {
+            
+            Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
+        }
+
+        return gameId;
+    }
+
+    synchronized public int getPlayerNumbers() {
+        int gameId = -1;
+        try {
+            gameId = is.readInt();
+
+            System.out.println("received player qtde!");
 
         } catch (Exception e) {
           Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
 
         return gameId;
-    }
-
-
-    
+    }   
 
 }

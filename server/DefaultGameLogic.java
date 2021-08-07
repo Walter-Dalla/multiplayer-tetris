@@ -1,6 +1,4 @@
-import java.io.Serializable;
-
-public class DefaultGameLogic implements Serializable {
+public class DefaultGameLogic {
     private static final long serialVersionUID = -299482035708790407L;
 
     public GameMap gameMap = new GameMap(12, 24);
@@ -27,8 +25,4 @@ public class DefaultGameLogic implements Serializable {
         this.gameMap = gameMap;
     }
 
-
-    public int getMaxPlayers(){
-        return 2;
-    }
 }
