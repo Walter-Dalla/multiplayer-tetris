@@ -2,25 +2,26 @@ import java.awt.Color;
 import java.awt.Point;
 import java.util.Random;
 
-
 public class GameLogic extends DefaultGameLogic {
-   private Random rand = new Random();
-    
+	private Random rand = new Random();
+
+	public boolean endGame = false;
+	public boolean endMessage = false;
+
 	private Shape fallingShape;
 	private Point centerPoint = new Point(5, 2);
-    
-    GameLogic(){
-        super();
-        newFallingShape();
-    }
 
+	GameLogic() {
+		super();
+		newFallingShape();
+	}
 
-	public void newFallingShape(){
-		
+	public void newFallingShape() {
+
 		int randomNumber = rand.nextInt(6);
 		Shape newShape;
 		centerPoint = new Point(5, 2);
-		
+
 		switch (randomNumber) {
 			case 0:
 				newShape = new StripShape();
@@ -37,7 +38,7 @@ public class GameLogic extends DefaultGameLogic {
 			case 3:
 				newShape = new OShape();
 				break;
-				
+
 			case 4:
 				newShape = new SShape();
 				break;
@@ -53,34 +54,33 @@ public class GameLogic extends DefaultGameLogic {
 				newShape = new LShape();
 		}
 
-		
 		fallingShape = newShape;
-        System.out.println("falling shape");
-		if(willCollide(0, 1)) {
+		System.out.println("falling shape");
+		if (willCollide(0, 1)) {
 			System.out.printf("Finish him");
+			endGame = false;
+			endMessage = true;
 		}
 	}
 
-	public void fallBlock(){
+	public void fallBlock() {
 
 		int fallMovementValue = 1;
 
-		if(willCollide(0, fallMovementValue)) {
+		if (willCollide(0, fallMovementValue)) {
 			fixToMap();
-		}
-		else {
+		} else {
 			centerPoint.y += fallMovementValue;
 		}
 	}
 
-	
-	public void move(int command){
-		
-		if(!willCollide(command, 0)) {
+	public void move(int command) {
+
+		if (!willCollide(command, 0)) {
 			centerPoint.x += command;
 		}
 	}
-	
+
 	private Boolean willCollide(Point[] shape) {
 		return willCollide(shape, 0, 0);
 	}
@@ -89,7 +89,7 @@ public class GameLogic extends DefaultGameLogic {
 		return willCollide(fallingShape.getShape(), xModifier, yModifier);
 	}
 
-	private Boolean willCollide(Point[] shape, int xModifier, int yModifier){
+	private Boolean willCollide(Point[] shape, int xModifier, int yModifier) {
 		clearLastShapeRender();
 
 		for (Point point : shape) {
@@ -100,16 +100,16 @@ public class GameLogic extends DefaultGameLogic {
 
 			Boolean collide = gameColor != gameMap.getMapBackgroundColor();
 
-			if(collide) {
+			if (collide) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
 
 	private void fixToMap() {
-		
+
 		for (Point point : fallingShape.getShape()) {
 			gameMap.setMapBlock(point.x + centerPoint.x, point.y + centerPoint.y, fallingShape.color);
 		}
@@ -117,17 +117,17 @@ public class GameLogic extends DefaultGameLogic {
 		isFull();
 		newFallingShape();
 	}
-	
-	private void clearLastShapeRender(){
+
+	private void clearLastShapeRender() {
 		for (Point point : fallingShape.getShape()) {
 			int newX = point.x + centerPoint.x;
 			int newY = point.y + centerPoint.y;
-	
+
 			gameMap.setMapBlock(newX, newY, gameMap.getMapBackgroundColor());
 		}
 	}
 
-	public void renderShapes(){
+	public void renderShapes() {
 		for (Point point : fallingShape.getShape()) {
 			int newX = point.x + centerPoint.x;
 			int newY = point.y + centerPoint.y;
@@ -138,23 +138,22 @@ public class GameLogic extends DefaultGameLogic {
 
 	public void rotate(Boolean isLeftRotation) {
 		clearLastShapeRender();
-		
+
 		Point[] newPosition = fallingShape.preRotate(fallingShape.getShape(), isLeftRotation);
-		
-		if(!willCollide(newPosition)) {
+
+		if (!willCollide(newPosition)) {
 			fallingShape.rotate(isLeftRotation);
 		}
 	}
 
-	public void isFull(){
+	public void isFull() {
 		int rowStrick = 0;
 		int mapOffset = 1;
 
-		for(int rowIndex = mapOffset; rowIndex < gameMap.getHeight() -mapOffset; rowIndex++) {
+		for (int rowIndex = mapOffset; rowIndex < gameMap.getHeight() - mapOffset; rowIndex++) {
 			Boolean isRowFull = gameMap.checkIfRowIsFull(rowIndex);
-			
-			
-			if(isRowFull){
+
+			if (isRowFull) {
 				rowStrick++;
 				gameMap.clearRow(rowIndex);
 				gameMap.applyGravity(rowIndex);
@@ -164,7 +163,7 @@ public class GameLogic extends DefaultGameLogic {
 		calculatePoints(rowStrick);
 	}
 
-	public void calculatePoints(int rowStrick){
+	public void calculatePoints(int rowStrick) {
 
 		switch (rowStrick) {
 			case 1:
@@ -181,15 +180,14 @@ public class GameLogic extends DefaultGameLogic {
 				break;
 		}
 	}
-	
-	public void beforePaintComponent()
-	{
+
+	public void beforePaintComponent() {
 		clearLastShapeRender();
 		renderShapes();
-		
+
 	}
 
-    public int getMaxPlayers(){
-        return 2;
-    }
+	public int getMaxPlayers() {
+		return 2;
+	}
 }

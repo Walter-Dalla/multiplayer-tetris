@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -8,6 +9,8 @@ public class Screen extends JPanel {
 
     private GameMap gameMap = new GameMap(12, 24);
 	private int score = 100;
+
+	public boolean endMessage = false;
 
     void setScore(int score){
         this.score = score;
@@ -31,7 +34,15 @@ public class Screen extends JPanel {
 		
 		// Display the score
 		g.setColor(Color.WHITE);
-		g.drawString("" + score, 19*12, 25);
+		g.setFont(new Font("Roboto", 1, 15));
+		g.drawString("" + score, 12*12, 10*65);
+
+		if (endMessage){
+			g.setColor(Color.GRAY);
+			g.setFont(new Font("Roboto", 1, 30));
+			g.drawString("FIM DE JOGO", 12*5, 10*30);
+			
+		}
 		
 	}
 

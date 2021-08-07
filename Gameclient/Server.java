@@ -32,7 +32,7 @@ public class Server {
             
 
         } catch (Exception e) {
-          Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
+            // Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
 
         return logic; 
@@ -44,7 +44,7 @@ public class Server {
             os.writeInt(control);
             os.flush();
         } catch (IOException e) {
-            Mensagem.erroFatalExcecao("A imagem não pode ser enviada!", e);
+            // Mensagem.erroFatalExcecao("A imagem não pode ser enviada!", e);
         }
     }
 

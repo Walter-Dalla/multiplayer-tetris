@@ -34,17 +34,19 @@ public class Tetris extends JPanel {
 		// Make the falling piece drop every second
 		new Thread() {
 			@Override public void run() {
-				while (true) {
-					
-					try {
-						Thread.sleep(600);
-                        DefaultGameLogic gameLogic1 = s.receiveLogic();
+				do{
+					while (true) {
 						
-                        game.paintGame(gameLogic1);
-					} catch ( InterruptedException e ) {
-						System.out.println(e.getMessage());
+						try {
+							Thread.sleep(600);
+							DefaultGameLogic gameLogic1 = s.receiveLogic();
+							
+							game.paintGame(gameLogic1);
+						} catch ( InterruptedException e ) {
+							System.out.println(e.getMessage());
+						}
 					}
-				}
+				} while (game.endGame);
 			}
 		}.start();
 	}   
