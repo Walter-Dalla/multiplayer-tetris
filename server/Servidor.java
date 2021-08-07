@@ -2,7 +2,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class JogoServidor {
+public class Servidor {
   public static void main(String[] args) {
     ServerSocket serverSocket = null;
     int porto = 12345;
