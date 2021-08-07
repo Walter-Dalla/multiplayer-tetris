@@ -7,6 +7,10 @@ public class DefaultGameLogic implements Serializable {
     
 	public int score = 100;
 
+    public void addScore(int score){
+        this.score += score;
+    }
+
     public void setScore(int score){
         this.score = score;
     }

@@ -9,6 +9,8 @@ public class GameLogic extends DefaultGameLogic {
 	private Shape fallingShape;
 	private Point centerPoint = new Point(5, 2);
     
+    int ROW_DEFAULT_VALUE = 100;
+
     GameLogic(){
         super();
         newFallingShape();
@@ -165,21 +167,7 @@ public class GameLogic extends DefaultGameLogic {
 	}
 
 	public void calculatePoints(int rowStrick){
-
-		switch (rowStrick) {
-			case 1:
-				score += 100;
-				break;
-			case 2:
-				score += 300;
-				break;
-			case 3:
-				score += 500;
-				break;
-			case 4:
-				score += 800;
-				break;
-		}
+        addScore(ROW_DEFAULT_VALUE * rowStrick);
 	}
 	
 	public void beforePaintComponent()
