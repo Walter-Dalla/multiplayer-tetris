@@ -10,11 +10,13 @@ public class GameLogic extends DefaultGameLogic {
 
 	private Shape fallingShape;
 	private Point centerPoint = new Point(5, 2);
+    
+    int ROW_DEFAULT_VALUE = 100;
 
-	GameLogic() {
-		super();
-		newFallingShape();
-	}
+    GameLogic(){
+        super();
+        newFallingShape();
+    }
 
 	public void newFallingShape() {
 
@@ -55,8 +57,8 @@ public class GameLogic extends DefaultGameLogic {
 		}
 
 		fallingShape = newShape;
-		System.out.println("falling shape");
-		if (willCollide(0, 1)) {
+        System.out.println("new falling shape");
+		if(willCollide(0, 1)) {
 			System.out.printf("Finish him");
 			endGame = false;
 			endMessage = true;
@@ -131,8 +133,8 @@ public class GameLogic extends DefaultGameLogic {
 		for (Point point : fallingShape.getShape()) {
 			int newX = point.x + centerPoint.x;
 			int newY = point.y + centerPoint.y;
-
-			gameMap.setMapBlock(newX, newY, fallingShape.color);
+            
+            gameMap.setMapBlock(newX, newY, fallingShape.color);
 		}
 	}
 
@@ -163,22 +165,8 @@ public class GameLogic extends DefaultGameLogic {
 		calculatePoints(rowStrick);
 	}
 
-	public void calculatePoints(int rowStrick) {
-
-		switch (rowStrick) {
-			case 1:
-				score += 100;
-				break;
-			case 2:
-				score += 300;
-				break;
-			case 3:
-				score += 500;
-				break;
-			case 4:
-				score += 800;
-				break;
-		}
+	public void calculatePoints(int rowStrick){
+        addScore(ROW_DEFAULT_VALUE * rowStrick);
 	}
 
 	public void beforePaintComponent() {
@@ -187,7 +175,11 @@ public class GameLogic extends DefaultGameLogic {
 
 	}
 
-	public int getMaxPlayers() {
-		return 2;
-	}
+    public int getMaxPlayers(){
+        return 2;
+    }
+
+    public GameData generaGameData(){
+        return new GameData(gameMap.getMap(), score++);
+    }
 }

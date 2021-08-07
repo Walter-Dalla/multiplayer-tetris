@@ -3,6 +3,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 public class Server {
 
@@ -22,20 +23,19 @@ public class Server {
         }
     }
 
-    public DefaultGameLogic receiveLogic() {
-        DefaultGameLogic logic = null;
+    public LinkedList<GameData> receiveGameDataFromServer() {
+        LinkedList<GameData> data = null;
 
         try {
-          
-            // logic.setGameMap((GameMap) is.readObject());
-            logic = (DefaultGameLogic) is.readObject();
-            
+            data = (LinkedList<GameData>) is.readObject();
+
+            System.out.println("received data!");
 
         } catch (Exception e) {
             // Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
         }
 
-        return logic; 
+        return data; 
     }
 
 
@@ -47,6 +47,35 @@ public class Server {
             // Mensagem.erroFatalExcecao("A imagem não pode ser enviada!", e);
         }
     }
+
+    public int getGameId() {
+        int gameId = -1;
+        try {
+            gameId = is.readInt();
+
+            System.out.println("received game id!");
+
+        } catch (Exception e) {
+          Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
+        }
+
+        return gameId;
+    }
+
+    public int getPlayerNumbers() {
+        int gameId = -1;
+        try {
+            gameId = is.readInt();
+
+            System.out.println("received game id!");
+
+        } catch (Exception e) {
+          Mensagem.erroFatalExcecao("Jogo terminado pelo servidor.", e);
+        }
+
+        return gameId;
+    }
+
 
     
 
