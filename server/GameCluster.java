@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class GameCluster implements IGame{
-    private static final int MAX_CLIENTS = 1;
+    private static final int MAX_CLIENTS = 2;
 
     private List<Socket> clients = new ArrayList<Socket>(MAX_CLIENTS);
     private List<GameLogic> logics = new ArrayList<GameLogic>(MAX_CLIENTS);
@@ -111,14 +111,9 @@ public class GameCluster implements IGame{
             }
         }).start();
     }
-    int cont = 0;
+    
     private void handleGameTick() {
-        cont ++;
-        System.out.println(cont);
-        if(cont == 3){
-            logics.get(0).setGameOver();
-
-        }
+    
     
         for(int i = 0; i < clients.size(); i++){
             GameLogic logic = logics.get(i);

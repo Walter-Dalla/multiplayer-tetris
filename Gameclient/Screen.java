@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import javax.swing.JPanel;
 
@@ -8,6 +9,13 @@ public class Screen extends JPanel {
 
 	private int score = 100;
     private Color[][] gameMap;
+    private boolean isGameOver = false;
+    private boolean isWinner = false;
+
+    void setGameOver(boolean win){
+        isGameOver = true;
+        isWinner = win;
+    }
 
     void setScore(int score){
         this.score = score;
@@ -36,13 +44,34 @@ public class Screen extends JPanel {
 		// Display the score
 		g.setColor(Color.WHITE);
 		g.drawString("" + score, 19*12, 25);
-		
-	}
+	
+        g.setFont(new Font("Roboto", 1, 15));
+        g.drawString("" + score, 12*12, 10*65);
 
+        if (isGameOver){
+            g.setColor(Color.GRAY);
+            g.setFont(new Font("Roboto", 1, 30));
+            
+            String message = isWinner ? "Ganhou": "Perdeu";
+            g.drawString(message, 12*5, 10*30);
+        }
+
+	}
+    
     public void paintGame(GameData gameData){
 
         setGameMap(gameData.map);
         setScore(gameData.score);
+        
+        repaint();
+    }
+
+    public void paintGame(GameData gameData, boolean winner){
+
+        setGameMap(gameData.map);
+        setScore(gameData.score);
+
+        setGameOver(winner);
         
         repaint();
     }

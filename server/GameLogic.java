@@ -173,6 +173,9 @@ public class GameLogic extends DefaultGameLogic implements ILogic {
 	
 	public void beforePaintComponent()
 	{
+        if(gameOver) {
+            return;
+        }
 		clearLastShapeRender();
 		renderShapes();
 		

@@ -12,14 +12,15 @@ public class Game extends JPanel {
     Server s;
 
 	public Game() {
-		JFrame f = new JFrame("Tetris");
-		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		f.setSize(900, 900);
-    
+        
         s = new Server();
-
+        
         int gameId = s.getGameId();
         int playerNumbers = s.getPlayerNumbers();
+		
+        JFrame f = new JFrame("Tetris - " + gameId);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.setSize(900, 900);
         
 		GridLayout gridLayout = new GridLayout(0, 2);
         f.setLayout(gridLayout);
@@ -67,6 +68,7 @@ public class Game extends JPanel {
 		}.start();
 	}
 
+    int winnerId = -1;
 
     void renderGameTick(LinkedList<Screen> enemies, LinkedList<GameData> gameLogic1, int gameId){
         boolean isGameOver = false;
@@ -75,22 +77,41 @@ public class Game extends JPanel {
             isGameOver = gameLogic1.get(i).gameOver;
             if(isGameOver){
                 this.isGameOver = isGameOver;
+                winnerId = i;
                 System.out.println("Game over!");
-                int winnerId = s.getWinnerId();
                 System.out.println("Winner: "+winnerId);
             }
         }
 
-        enemies.get(0).paintGame(gameLogic1.get(gameId));
+        if(this.isGameOver){
+            enemies.get(0).paintGame(gameLogic1.get(gameId), gameId == winnerId);
+        }
+        else{
+            enemies.get(0).paintGame(gameLogic1.get(gameId));
+        }
+
 
         for(int i = 0; i < enemies.size(); i++) {
-            int gamelogicIndex =  i;
+            int gameLogicIndex =  i;
+            int screenIndex = i;
             
-            if(i == gameId){
-                gamelogicIndex = 0;
+
+            if(i == 0) {
+                screenIndex = gameId;
+                gameLogicIndex = 0;
+            }
+            
+            if(gameId == i){
+                continue;
             }
 
-            enemies.get(i).paintGame(gameLogic1.get(gamelogicIndex));
+            if(this.isGameOver){
+                enemies.get(screenIndex).paintGame(gameLogic1.get(gameLogicIndex), i == winnerId);
+            }
+            else{
+                enemies.get(screenIndex).paintGame(gameLogic1.get(gameLogicIndex));
+
+            }
             
         }
     }
